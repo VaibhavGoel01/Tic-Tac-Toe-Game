@@ -3,7 +3,7 @@ let resetBtn = document.querySelector("#Reset-btn");
 let newGameBtn = document.querySelector("#new-btn");
 let msgContainer = document.querySelector(".msg-container");
 let message = document.querySelector("#message");
-
+let count = 0;
 let turnO = true;
 
 const winPatterns = [
@@ -18,6 +18,7 @@ const winPatterns = [
 ];
 
 const resetGame = () => {
+    count = 0;
     turnO = true;
     enableboxes();
     msgContainer.classList.add("hide");
@@ -36,8 +37,11 @@ boxes.forEach((box) => {
             turnO = true;
         }
         box.disabled = true;
-
-        checkWinner();
+        count++;
+        let isWinner = checkWinner();
+        if(count == 9 && !isWinner){
+            draw();
+        }
     });
 });
 
@@ -70,10 +74,18 @@ const checkWinner = () => {
             if(pos1Val === pos2Val && pos2Val === pos3Val){
                 console.log("Winner", pos1Val);
                 showWinner(pos1Val);
+                return true;
             }
         }
     }
 };
 
+const draw = () => {
+    if(count === 9){
+        message.innerText = `It is Draw, Next Game!!`;
+        msgContainer.classList.remove("hide");
+        disableboxes();
+    }
+};
 newGameBtn.addEventListener("click", resetGame);
 resetBtn.addEventListener("click", resetGame);
